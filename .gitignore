@@ -1,0 +1,21 @@
+# Netlify
+.netlify/
+
+# Секрети та локальні змінні — ніколи не комітити
+.env
+.env.*
+*.token
+secrets.*
+
+# Внутрішні документи компанії не місце в репозиторії сайту
+навчальна база/
+*.docx
+*.pdf
+*.pptx
+*.xlsx
+
+# Системне
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
