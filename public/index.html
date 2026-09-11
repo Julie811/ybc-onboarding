@@ -459,6 +459,8 @@
       id:"structure", name:"Оргструктура", category:"Структура · відділи та ролі", color:"#3d6fa0",
       hook:"10 функцій компанії: від маркетингу до юридичного супроводу.",
       doc:{
+        summaryLabel:"Філії",
+        detailsLabel:"Відділи",
         summary:[
           "Київ, Харків, Львів, Одеса, Дніпро.",
           "Варшава, Івано-Франківськ, Вроцлав, Берлін, Лісабон.",
@@ -752,8 +754,8 @@
     var matHtml = c.materials.map(function(m){ return '<a href="'+m[1]+'" target="_blank" rel="noopener">'+m[0]+'</a>'; }).join("");
 
     var docHtml =
-      '<div class="block-label">Коротко</div>'+renderText(c.doc.summary)+
-      '<div class="block-label">Детальніше</div>'+renderText(c.doc.details)+
+      '<div class="block-label">'+(c.doc.summaryLabel || "Коротко")+'</div>'+renderText(c.doc.summary)+
+      '<div class="block-label">'+(c.doc.detailsLabel || "Детальніше")+'</div>'+renderText(c.doc.details)+
       '<div class="chips">'+chipsHtml+'</div>'+
       '<div class="insight"><span class="tag">Головний висновок</span>'+renderText(c.doc.takeaway)+'</div>';
 
