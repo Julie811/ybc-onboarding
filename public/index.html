@@ -134,11 +134,14 @@
   .path-note .chain span.on{ background:var(--good); }
 
   /* ---------- board ---------- */
-  .board{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; }
+  .board{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  @media (max-width:760px){ .board{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:520px){ .board{ grid-template-columns:1fr; } }
 
-  .card-flip{ perspective:1400px; height:280px; position:relative; flex:1 1 200px; max-width:calc(25% - 0.75rem); }
-  @media (max-width:760px){ .card-flip{ max-width:calc(50% - 0.5rem); } }
-  @media (max-width:520px){ .card-flip{ max-width:100%; } }
+  .board-adaptive{ grid-template-columns:1fr; max-width:305px; margin:1rem auto 0; }
+  @media (max-width:520px){ .board-adaptive{ max-width:100%; } }
+
+  .card-flip{ perspective:1400px; height:280px; position:relative; }
   .card-inner{
     position:relative; width:100%; height:100%; transform-style:preserve-3d;
     transition:transform 0.55s cubic-bezier(.4,.2,.2,1);
@@ -347,6 +350,8 @@
   </div>
 
   <div class="board" id="board"></div>
+
+  <div class="board board-adaptive" id="board-adaptive"></div>
 
   <div class="synthesis-wrap">
     <div id="synth-locked" class="synth-locked">
@@ -741,8 +746,11 @@
 
   function renderBoard(){
     var board = document.getElementById("board");
+    var boardAdaptive = document.getElementById("board-adaptive");
     board.innerHTML = "";
+    boardAdaptive.innerHTML = "";
     MODULES.forEach(function(c, i){
+      var target = (i === MODULES.length - 1) ? boardAdaptive : board;
       var unlocked = isUnlocked(i);
       var opened = !!state.opened[c.id];
       var passed = !!state.passed[c.id];
@@ -778,21 +786,23 @@
         overlayDiv.innerHTML = '<div class="state-label">Заблоковано</div><p>Спочатку пройдіть тест<br>до модуля '+num+'</p>';
         wrap.appendChild(overlayDiv);
       }
-      board.appendChild(wrap);
+      target.appendChild(wrap);
     });
 
-    board.querySelectorAll("[data-decode]").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        var id = btn.getAttribute("data-decode");
-        if(!state.opened[id]){ state.opened[id] = true; state.score += 10; persist(); updateHUD(); }
-        document.getElementById("flip-"+id).classList.add("flipped");
+    [board, boardAdaptive].forEach(function(container){
+      container.querySelectorAll("[data-decode]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var id = btn.getAttribute("data-decode");
+          if(!state.opened[id]){ state.opened[id] = true; state.score += 10; persist(); updateHUD(); }
+          document.getElementById("flip-"+id).classList.add("flipped");
+        });
       });
-    });
-    board.querySelectorAll("[data-open]").forEach(function(btn){
-      btn.addEventListener("click", function(){ openDossier(btn.getAttribute("data-open")); });
-    });
-    board.querySelectorAll("[data-quiz]").forEach(function(btn){
-      btn.addEventListener("click", function(){ openCaseQuiz(btn.getAttribute("data-quiz")); });
+      container.querySelectorAll("[data-open]").forEach(function(btn){
+        btn.addEventListener("click", function(){ openDossier(btn.getAttribute("data-open")); });
+      });
+      container.querySelectorAll("[data-quiz]").forEach(function(btn){
+        btn.addEventListener("click", function(){ openCaseQuiz(btn.getAttribute("data-quiz")); });
+      });
     });
   }
 
