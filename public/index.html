@@ -1239,7 +1239,7 @@
           '<div class="mono" style="font-size:0.72rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.08em;">Результат тесту</div>'+
           '<div class="rank '+(pass?"pass":"fail")+'">'+(pass ? "Тест пройдено" : "Тест не пройдено")+'</div>'+
           '<div class="score-big">'+q.correct+' / '+q.order.length+'</div>'+
-          '<p>'+(pass ? "Потрібний поріг (50% і вище) досягнуто. Можна рухатись далі." : "Потрібно щонайменше "+opts.passThreshold+" з "+q.order.length+" правильних (50% і вище). Спробуйте ще раз.")+'</p>'+
+          '<p>'+(pass ? "Потрібний поріг ("+opts.percent+"% і вище) досягнуто. Можна рухатись далі." : "Потрібно щонайменше "+opts.passThreshold+" з "+q.order.length+" правильних ("+opts.percent+"% і вище). Спробуйте ще раз.")+'</p>'+
           '<div class="results-actions">'+
             (pass ? '<button class="btn primary" id="continue-btn">Продовжити</button>' : '<button class="btn primary" id="retry-btn">Спробувати ще раз</button>')+
             '<button class="btn" id="close-btn">Закрити</button>'+
@@ -1261,7 +1261,8 @@
     runQuiz({
       title: "Тест: "+c.name,
       questions: c.quiz,
-      passThreshold: Math.ceil(c.quiz.length*0.5), // 50% і вище відкриває наступний модуль
+      percent: 60, // 60% і вище відкриває наступний модуль
+      passThreshold: Math.ceil(c.quiz.length*0.6),
       pointsPer: 15,
       onPass: function(correct, total){
         state.passed[c.id] = true;
@@ -1281,6 +1282,7 @@
     runQuiz({
       title: "Фінальний тест",
       questions: pool,
+      percent: 70,
       passThreshold: Math.ceil(pool.length*0.7),
       pointsPer: 20,
       onPass: function(correct, total){
