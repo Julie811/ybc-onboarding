@@ -1011,6 +1011,18 @@
     if(state.finalPassed){ fb.textContent = "Фінальний тест пройдено"; fb.className = "final-btn done"; fb.disabled = true; }
     else if(passedCount() >= MODULES.length){ fb.textContent = "Фінальний тест"; fb.className = "final-btn ready"; fb.disabled = false; }
     else{ fb.textContent = "Фінальний тест ("+passedCount()+"/"+MODULES.length+")"; fb.className = "final-btn"; fb.disabled = true; }
+
+    // Блок під дошкою: підказка й кнопка запуску фінального тесту
+    var locked = document.getElementById("synth-locked");
+    if(!state.finalPassed && passedCount() >= MODULES.length){
+      var need = Math.ceil(MODULES.filter(function(c){ return c.quiz && c.quiz.length; }).length * 0.7);
+      locked.innerHTML =
+        '<p style="margin:0 0 0.8rem">Усі модулі пройдено. Залишився фінальний тест: по одному питанню з кожного модуля, потрібно щонайменше '+need+' правильних відповідей.</p>'+
+        '<button class="btn primary" id="final-btn-inline">Пройти фінальний тест</button>';
+      document.getElementById("final-btn-inline").addEventListener("click", openFinalTest);
+    } else if(!state.finalPassed){
+      locked.textContent = "Це відкриється після фінального тесту. Спочатку пройди всі модулі: "+passedCount()+" з "+MODULES.length+".";
+    }
   }
 
   function renderBoard(){
