@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="only light">
+<meta name="theme-color" content="#f2f1f7">
 <title>Стань частиною команди YBC</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/favicon.png">
@@ -21,34 +23,12 @@
     --gold:#9c7a24; --gold-soft:#f2e8cf;
     --draft:#8a6d1f; --draft-soft:#f6efd8;
     --shadow:0 1px 3px rgba(15,18,20,0.07);
+    color-scheme:only light;
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#15141b; --surface:#1e1d26; --surface-2:#2a2933;
-      --ink:#f2f1f7; --ink-muted:#a8a6b3; --border:#33323c;
-      --accent:#fa5255; --accent-strong:#ff7a7d; --accent-soft:#3a1f21;
-      --stamp:#ff7a7d; --stamp-soft:#3a1f21;
-      --good:#7fd9a6; --good-soft:#1d3327;
-      --bad:#e2685a; --bad-soft:#3a201c;
-      --gold:#e0b45c; --gold-soft:#332a14;
-      --draft:#e0c05c; --draft-soft:#332c14;
-      --shadow:0 2px 14px rgba(0,0,0,0.4);
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#15141b; --surface:#1e1d26; --surface-2:#2a2933;
-    --ink:#f2f1f7; --ink-muted:#a8a6b3; --border:#33323c;
-    --accent:#fa5255; --accent-strong:#ff7a7d; --accent-soft:#3a1f21;
-    --stamp:#ff7a7d; --stamp-soft:#3a1f21;
-    --good:#7fd9a6; --good-soft:#1d3327;
-    --bad:#e2685a; --bad-soft:#3a201c;
-    --gold:#e0b45c; --gold-soft:#332a14;
-    --draft:#e0c05c; --draft-soft:#332c14;
-    --shadow:0 2px 14px rgba(0,0,0,0.4);
-  }
+  /* Платформа завжди світла: нічна тема браузера чи телефона дизайн не змінює. */
 
   *{ box-sizing:border-box; }
-  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; background:var(--bg); color-scheme:only light; }
   body.modal-open{ overflow:hidden; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:"Manrope",system-ui,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
   ::selection{ background:var(--accent-soft); }
@@ -312,8 +292,6 @@
   .brand-logo{ display:block; height:40px; width:auto; }
   .hud-title{ margin-right:auto; }
   .gate-logo{ height:52px; margin:0 auto 1.4rem; }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .brand-logo{ filter:invert(1); } }
-  :root[data-theme="dark"] .brand-logo{ filter:invert(1); }
 
   /* ---------- іконки модулів (символи з сайту YBC) ---------- */
   .mod-ico{ width:44px; height:44px; flex:none; border-radius:14px; display:grid; place-items:center; background:var(--surface-2); color:var(--ink-muted); }
