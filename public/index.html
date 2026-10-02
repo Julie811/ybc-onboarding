@@ -124,6 +124,8 @@
     font-size:0.72rem; padding:0.4rem 0.6rem; border-radius:12px; font-family:"IBM Plex Mono", monospace;
   }
   .reset-btn:hover{ color:var(--bad); border-color:var(--bad); }
+  .logout-btn{ color:var(--ink); }
+  .logout-btn:hover{ color:var(--accent-strong); border-color:var(--accent-strong); }
 
   /* ---------- intro ---------- */
   .brief{ margin-bottom:2.2rem; }
@@ -320,7 +322,8 @@
         <div class="err-msg">Введіть коректний email</div>
       </div>
       <button class="gate-submit" id="gate-submit">Розпочати онбординг</button>
-      <p class="gate-note">Ці дані підуть у звіт для HR, щоб бачити прогрес проходження онбордингу.</p>
+      <p class="gate-note" id="gate-saved" hidden>Ми знайшли твій прогрес. Він збережеться й відновиться після входу.</p>
+      <p class="gate-note">Ці дані підуть у звіт для HR, щоб бачити прогрес проходження онбордингу. Щоб продовжити пізніше, увійди з тією самою поштою в цьому ж браузері.</p>
     </div>
   </div>
 </div>
@@ -334,6 +337,7 @@
       <span class="stat">Бали: <b id="stat-score">0</b></span>
       <button class="final-btn" id="final-btn">Фінальний тест</button>
       <button class="reset-btn" id="reset-btn" title="Скинути прогрес">Скинути прогрес</button>
+      <button class="reset-btn logout-btn" id="logout-btn" title="Вийти. Прогрес збережеться">Вийти</button>
     </div>
   </div>
 
@@ -828,17 +832,50 @@
   function rebuildModules(){ MODULES = CASES.concat([buildAdaptiveCase(state.user && state.user.position)]); }
 
   // ---------- state ----------
-  var state = { user:null, passed:{}, opened:{}, finalPassed:false, score:0 };
+  // Прогрес зберігається окремо для кожної пошти (в цьому браузері):
+  // store = { current: "email" | null, users: { "email": {user, passed, opened, finalPassed, score} } }
+  // "Вийти" лише скидає current, прогрес лишається. Повторний вхід з тією
+  // самою поштою відновлює його.
+  var STORE_KEY = "ybcOnboardingV3";
+  var store = { current:null, users:{} };
+  function emptyProgress(user){ return { user:user || null, passed:{}, opened:{}, finalPassed:false, score:0 }; }
+  function emailKey(email){ return String(email || "").trim().toLowerCase(); }
+
   try{
-    var saved = JSON.parse(localStorage.getItem("ybcOnboardingV2") || "{}");
-    if(saved.user) state.user = saved.user;
-    if(saved.passed) state.passed = saved.passed;
-    if(saved.opened) state.opened = saved.opened;
-    if(saved.finalPassed) state.finalPassed = saved.finalPassed;
-    if(typeof saved.score === "number") state.score = saved.score;
+    var rawStore = localStorage.getItem(STORE_KEY);
+    if(rawStore){
+      var parsed = JSON.parse(rawStore);
+      if(parsed && parsed.users) store = parsed;
+    } else {
+      // міграція зі старого формату (один користувач на браузер)
+      var old = JSON.parse(localStorage.getItem("ybcOnboardingV2") || "{}");
+      if(old.user && old.user.email){
+        var k = emailKey(old.user.email);
+        store.users[k] = { user:old.user, passed:old.passed || {}, opened:old.opened || {}, finalPassed:!!old.finalPassed, score:typeof old.score === "number" ? old.score : 0 };
+        store.current = k;
+      }
+    }
   }catch(e){}
 
-  function persist(){ try{ localStorage.setItem("ybcOnboardingV2", JSON.stringify(state)); }catch(e){} }
+  var state = emptyProgress();
+  if(store.current && store.users[store.current]){
+    var cur = store.users[store.current];
+    state = { user:cur.user, passed:cur.passed || {}, opened:cur.opened || {}, finalPassed:!!cur.finalPassed, score:typeof cur.score === "number" ? cur.score : 0 };
+  } else {
+    store.current = null;
+  }
+
+  function persist(){
+    try{
+      if(state.user){
+        store.current = emailKey(state.user.email);
+        store.users[store.current] = state;
+      } else {
+        store.current = null;
+      }
+      localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    }catch(e){}
+  }
 
   function sendEvent(eventType, details, score){
     if(!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.indexOf("ВСТАВТЕ") === 0){
@@ -899,10 +936,45 @@
     var emailOk = validEmail(email);
     document.getElementById("f-email").classList.toggle("err", !emailOk); if(!emailOk) ok = false;
     if(!ok) return;
-    state.user = { name:name, position:position, email:email };
+    var existing = store.users[emailKey(email)];
+    if(existing){
+      // Та сама пошта: відновлюємо прогрес, оновлюємо ім'я та посаду
+      state = { user:existing.user, passed:existing.passed || {}, opened:existing.opened || {}, finalPassed:!!existing.finalPassed, score:typeof existing.score === "number" ? existing.score : 0 };
+      state.user = { name:name, position:position, email:email };
+      persist();
+      showMain();
+      return;
+    }
+    state = emptyProgress({ name:name, position:position, email:email });
     persist();
     sendEvent("start", "Розпочав(-ла) онбординг", 0);
     showMain();
+  });
+
+  // Якщо пошта вже відома, підставляємо ім'я та посаду і попереджаємо,
+  // що прогрес збережеться.
+  document.getElementById("in-email").addEventListener("input", function(){
+    var saved = store.users[emailKey(this.value)];
+    var note = document.getElementById("gate-saved");
+    if(saved && saved.user){
+      document.getElementById("in-name").value = saved.user.name;
+      document.getElementById("in-position").value = saved.user.position;
+      note.hidden = false;
+    } else {
+      note.hidden = true;
+    }
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", function(){
+    persist();
+    state = emptyProgress();
+    persist();
+    document.getElementById("in-name").value = "";
+    document.getElementById("in-position").value = "";
+    document.getElementById("in-email").value = "";
+    document.getElementById("gate-saved").hidden = true;
+    document.getElementById("overlay").hidden = true;
+    showGate();
   });
 
   if(state.user){ showMain(); } else { showGate(); }
@@ -1226,6 +1298,7 @@
   });
 
   document.getElementById("reset-btn").addEventListener("click", function(){
+    if(!window.confirm("Скинути весь прогрес для " + state.user.email + "? Модулі й бали буде обнулено.")) return;
     var user = state.user;
     state = { user:user, passed:{}, opened:{}, finalPassed:false, score:0 };
     persist();
