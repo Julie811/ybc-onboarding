@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Стань частиною команди YBC</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -46,10 +46,12 @@
   }
 
   *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  body.modal-open{ overflow:hidden; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:"Manrope",system-ui,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
   ::selection{ background:var(--accent-soft); }
   a{ color:var(--accent-strong); }
-  button{ font-family:inherit; cursor:pointer; }
+  button{ font-family:inherit; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
   button:disabled{ cursor:not-allowed; }
   button:focus-visible, a:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
   h1,h2,h3{ font-family:"Oswald",Impact,sans-serif; text-transform:uppercase; letter-spacing:0.01em; text-wrap:balance; margin:0; font-weight:600; }
@@ -81,7 +83,7 @@
   .field label{ display:block; font-size:0.8rem; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem; }
   .field input, .field select{
     width:100%; padding:0.65rem 0.8rem; border-radius:12px; border:1.5px solid var(--border);
-    background:var(--bg); color:var(--ink); font-family:"Manrope",sans-serif; font-size:0.95rem;
+    background:var(--bg); color:var(--ink); font-family:"Manrope",sans-serif; font-size:1rem; min-height:48px;
   }
   .field input:focus{ border-color:var(--accent); outline:none; }
   .field.err input{ border-color:var(--bad); }
@@ -152,11 +154,16 @@
   }
   .card-flip.flipped .card-inner{ transform:rotateY(180deg); }
   .card-face{
-    position:absolute; inset:0; backface-visibility:hidden;
+    position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:20px; border:1px solid var(--border); background:var(--surface);
     box-shadow:var(--shadow); padding:1rem; display:flex; flex-direction:column;
   }
   .card-back{ transform:rotateY(180deg); overflow:hidden; }
+  /* На телефонах прихована грань не має перехоплювати дотики */
+  .card-front{ pointer-events:auto; }
+  .card-back{ pointer-events:none; }
+  .card-flip.flipped .card-front{ pointer-events:none; }
+  .card-flip.flipped .card-back{ pointer-events:auto; }
 
   .card-flip.locked .card-face{ background:var(--surface-2); }
   .lock-overlay{
@@ -221,9 +228,9 @@
     background:var(--surface); border:1px solid var(--border); border-radius:22px;
     max-width:620px; width:100%; padding:1.5rem; box-shadow:var(--shadow); margin-bottom:2rem;
   }
-  .dossier-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:0.8rem; }
+  .dossier-head{ display:flex; align-items:center; justify-content:space-between; gap:0.8rem; position:sticky; top:0; z-index:5; background:var(--surface); padding:0.4rem 0; margin-top:-0.4rem; }
   .dossier-head h2{ font-size:1.25rem; display:flex; align-items:center; gap:0.5rem; }
-  .close-x{ background:var(--surface-2); border:none; width:30px; height:30px; border-radius:50%; font-size:1rem; color:var(--ink-muted); flex:none; }
+  .close-x{ background:var(--surface-2); border:none; min-width:44px; height:44px; padding:0 1rem; border-radius:999px; font-size:0.85rem; font-weight:700; color:var(--ink); flex:none; }
   .close-x:hover{ color:var(--ink); }
 
   .doc-tabs{ display:flex; gap:0.3rem; background:var(--surface-2); padding:0.25rem; border-radius:14px; margin-top:1rem; width:fit-content; }
@@ -242,7 +249,7 @@
   .insight .tag{ display:block; font-family:"IBM Plex Mono", monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--accent-strong); margin-bottom:0.3rem; }
   .insight p{ font-size:0.9rem; }
   .materials{ margin-top:0.6rem; font-size:0.85rem; }
-  .materials a{ display:block; margin-top:0.3rem; }
+  .materials a{ display:block; margin-top:0.3rem; overflow-wrap:anywhere; }
 
   .dossier-footer{ margin-top:1.3rem; padding-top:1.1rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:0.8rem; flex-wrap:wrap; }
 
@@ -254,6 +261,7 @@
   .slide-dots{ display:flex; gap:0.35rem; }
   .slide-dots span{ width:7px; height:7px; border-radius:50%; background:var(--border); }
   .slide-dots span.on{ background:var(--accent); }
+  .slide-count{ display:none; font-family:"IBM Plex Mono", monospace; font-size:0.85rem; color:var(--ink-muted); font-variant-numeric:tabular-nums; }
   .slide-arrow{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.35rem 0.7rem; font-size:0.85rem; color:var(--ink); font-family:"Manrope",sans-serif; }
   .slide-arrow:disabled{ opacity:0.35; }
 
@@ -296,6 +304,97 @@
   .btn:hover{ border-color:var(--accent); }
 
   footer{ margin-top:3rem; padding-top:1.4rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--ink-muted); }
+
+  /* ---------- сенсорні екрани: без залипання :hover ---------- */
+  @media (hover:none){
+    .lock-btn:hover, .next-btn:hover{ background:var(--ink); color:var(--bg); }
+    .btn:hover{ border-color:var(--border); }
+    .btn.primary:hover{ background:var(--ink); border-color:var(--ink); color:var(--bg); }
+    .mini-btn:hover{ border-color:var(--border); }
+    .mini-btn.quiz:hover{ background:var(--accent); border-color:var(--accent); }
+    .gate-submit:hover{ background:var(--accent); }
+    .final-btn.ready:hover{ background:var(--accent); border-color:var(--accent); }
+    .reset-btn:hover{ color:var(--ink-muted); border-color:var(--border); }
+    .logout-btn:hover{ color:var(--ink); border-color:var(--border); }
+    .opt-btn:hover:not(:disabled){ border-color:var(--border); }
+    .close-x:hover{ color:var(--ink); }
+  }
+
+  /* ---------- телефони ---------- */
+  @media (max-width:640px){
+    .wrap{
+      padding:1rem 1rem 4rem;
+      padding-left:max(1rem, env(safe-area-inset-left)); padding-right:max(1rem, env(safe-area-inset-right));
+      padding-bottom:max(4rem, calc(2rem + env(safe-area-inset-bottom)));
+    }
+    .gate{ margin:1rem auto 2rem; }
+    .gate-card{ padding:1.2rem; border-radius:20px; }
+    .gate-submit{ min-height:52px; font-size:1rem; }
+    .gate-note{ font-size:0.8rem; }
+
+    /* верхня панель: не липне, кнопки зручні для пальця */
+    .hud{ position:static; flex-direction:column; align-items:stretch; gap:0.7rem; margin:0 -1rem 1.2rem; padding:0.9rem 1rem; }
+    .hud-title h1{ font-size:1.15rem; margin-right:0; }
+    .hud-stats{ display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; width:100%; margin-left:0; }
+    .stat{ max-width:none; font-size:0.82rem; padding:0.5rem 0.75rem; justify-content:center; }
+    #stat-user{ grid-column:1 / -1; }
+    .final-btn{ grid-column:1 / -1; min-height:48px; font-size:0.85rem; }
+    .reset-btn, .logout-btn{ min-height:44px; font-size:0.8rem; }
+
+    .brief{ margin-bottom:1.6rem; }
+    .brief p{ font-size:1rem; }
+
+    /* картки */
+    .case-id, .front-top .case-id{ font-size:0.74rem; }
+    .front-top .category{ font-size:0.76rem; }
+    .back-ux{ font-size:0.9rem; }
+    .stamp-mini{ font-size:0.68rem; }
+    .lock-btn{ min-height:46px; padding:0.65rem 1rem; font-size:0.9rem; }
+    .back-actions{ gap:0.6rem; }
+    .mini-btn{ min-height:44px; padding:0.5rem 0.9rem; font-size:0.85rem; }
+    .lock-overlay p, .lock-overlay .state-label{ font-size:0.8rem; }
+
+    /* вікно матеріалу і тесту: на весь екран */
+    .overlay{ padding:0; align-items:stretch; }
+    .dossier{
+      max-width:none; min-height:100vh; min-height:100dvh; margin:0; border-radius:0; border:none;
+      padding:1rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+      padding-left:max(1rem, env(safe-area-inset-left)); padding-right:max(1rem, env(safe-area-inset-right));
+    }
+    .dossier-head h2{ font-size:1.1rem; }
+    .doc-tabs{ width:100%; }
+    .doc-tab{ flex:1; min-height:44px; font-size:0.9rem; }
+    .dossier p, .bullets li{ font-size:1rem; }
+    .block-label{ font-size:0.75rem; }
+    .chip{ font-size:0.8rem; padding:0.35rem 0.65rem; }
+    .materials{ font-size:0.95rem; }
+    .materials a{ padding:0.5rem 0; }
+    .dossier-footer .btn, .dossier-footer .btn.primary{ width:100%; min-height:52px; font-size:0.95rem; }
+
+    /* слайди */
+    .slide-box{ padding:1rem; }
+    .slide-box h3{ font-size:1.05rem; }
+    .slide-box p, .slide-box .bullets li{ font-size:1rem; }
+    .slide-dots{ display:none; }
+    .slide-count{ display:block; }
+    .slide-arrow{ min-height:46px; min-width:96px; font-size:0.95rem; }
+
+    /* тест */
+    .q-text{ font-size:1.1rem; }
+    .opt-btn{ min-height:52px; font-size:1rem; padding:0.75rem 0.9rem; align-items:center; }
+    .explain{ font-size:0.92rem; }
+    .next-btn{ min-height:52px; font-size:1rem; }
+    .results-actions .btn{ flex:1 1 100%; min-height:52px; font-size:0.95rem; }
+
+    .synth-locked{ padding:1.2rem; font-size:0.9rem; }
+    .synth-locked .btn{ width:100%; min-height:52px; }
+    .synth-unlocked h2{ font-size:1.35rem; }
+    footer{ font-size:0.85rem; }
+  }
+  @media (max-width:360px){
+    .gate h1{ font-size:1.55rem; }
+    .card-flip{ height:300px; }
+  }
 </style>
 </head>
 <body>
@@ -528,26 +627,26 @@
         {title:"Огляд", body:["Корпоративна культура - це правила гри.","Культура - це те, що компанія толерує на практиці."]},
         {title:"Чотири принципи роботи", body:["Deliver WOW: кожен учасник відчуває, що ці люди роблять неможливе.","Data-driven: ми вимірюємо, аналізуємо й діємо на основі чисел та фактів.","Чесний зворотний зв'язок: правда прямо, вчасно й з повагою.","Grow every day: через 6 місяців ти маєш бути кращим, ніж зараз."]},
         {title:"Deliver WOW", body:["Ми думаємо про досвід учасника і помічаємо деталі.","Ти здаєш роботу, якою пишаєшся."]},
-        {title:"Data-driven", body:["Кожне рішення підкріплене цифрою або фактом.","Ти знаєш свої метрики й фіксуєш результати, а не тільки дії."]},
+        {title:"Data-driven", body:["Кожне рішення підкріплене цифрою або фактом.","Ти знаєш свої метрики й фіксуєш результати: що саме сталося."]},
         {title:"Чесний зворотний зв'язок", body:["Фідбек даємо одразу, не накопичуємо до підходящого моменту.","Критика стосується дій або результату. Складне говоримо тет-а-тет.","Ти так само відкритий до фідбеку у свій бік."]},
         {title:"Grow every day", body:["Ми шукаємо можливості навчатись: на подіях клубу, в учасників, у колег.","Помилка стає можливістю знайти вихід і зрости.","Ріст пов'язаний із цілями команди й компанії."]},
         {title:"Формат комунікації", body:["У компанії понад 750 прописаних бізнес-процесів. Спершу перевір базу знань у Notion.","Говоримо коротко й по суті, приходимо з рішенням.","Формат будь-якого запиту: проблема, рішення, відповідальний, дедлайн."]},
         {title:"Система відповідальності", body:["OKR: кожен знає свої цілі й розуміє зв'язок із цілями клубу.","KPI: орієнтир для росту.","Щотижневий звіт: що зроблено, що не зроблено, що блокує.","One-to-one: чесна розмова про результат і розвиток.","Performance review: регулярна оцінка для руху вперед."]},
         {title:"Ритуали та традиції", body:["Щодня: Zoom керівника з командою, 15-30 хвилин.","Щотижня: Zoom управляючого партнера з керівниками відділів.","Щомісяця: аналіз попереднього місяця і план на наступний.","Щокварталу: підсумки кварталу й постановка OKR.","Щороку: стратегічна та фінансова сесія в грудні, офлайн у Варшаві."]},
         {title:"Антикультура", body:["Сім моделей поведінки, які ми не толеруємо:","байдужість, брехня, інтриги, виправдання, низькі стандарти, пасивність, деструктивна поведінка.","Помітив - говори. Прямо, вчасно й з повагою."]},
-        {title:"Наші люди", body:["Висока енергія: заряджає команду.","Любов до результату: важливо, що вийшло, а не скільки старався.","Дисципліна: тримає домовленості й поважає дедлайни."]},
+        {title:"Наші люди", body:["Висока енергія: заряджає команду.","Любов до результату: для людини важливо, що саме вийшло.","Дисципліна: тримає домовленості й поважає дедлайни."]},
         {title:"Історія про хліб", body:["Перша людина повертається без хліба й причин, чому не купила. Їй потрібен постійний контроль.","Друга купує хліб і виконує завдання.","Третя домовляється про безкоштовну річну доставку хліба за контрактом із 20% знижкою.","Ми будуємо команду з третіх людей."]},
         {title:"Лідерство", body:["Лідер у YBC формує команду з сильних та автономних людей.","Він надихає прикладом, приймає складні рішення й тримає високу планку.","Лідер створює умови, щоб команда вирішувала сама."]},
         {title:"Головний висновок", body:["Компанія свідомо наймає людей, які вирішують задачу ширше, ніж вона сформульована.","IN BUSINESS WE TRUST."]}
       ],
       materials:[["Корпоративна культура (Notion)", "https://app.notion.com/p/337a2ff374c280ce9ceff8550a5bc680?source=copy_link#35da2ff374c28097887ac8dffa5a64fe"]],
       quiz:[
-        {q:"Що за принципом Data-driven фіксує співробітник YBC?", answers:["Результати: що саме сталося","Кількість виконаних дій за тиждень","Відпрацьований час і кількість зустрічей","Рівень власної зайнятості у відсотках"], correct:"Результати: що саме сталося", explain:"Важливо, що сталося, а не скільки ти зробив. Це деталь із розділу Data-driven документа."},
+        {q:"Що за принципом Data-driven фіксує співробітник YBC?", answers:["Результати: що саме сталося","Кількість виконаних дій за тиждень","Відпрацьований час і кількість зустрічей","Рівень власної зайнятості у відсотках"], correct:"Результати: що саме сталося", explain:"Важливо, що саме сталося. Кількість зроблених дій другорядна. Це деталь із розділу Data-driven документа."},
         {q:"Явка на тематичні зустрічі впала. Яке повідомлення відповідає принципу Data-driven?", answers:["«За квартал явка впала з 24 до 16 людей. Анонс приходив менше ніж за 2 дні. Пропоную розсилати його за 7 днів»","«За квартал явка впала з 24 до 16 людей. Пропоную повністю змінити формат усіх тематичних зустрічей»","«Явка помітно знизилась, схоже, що людям стало менш цікаво. Давайте частіше нагадувати про зустрічі»","«Це через погоду або через Меркурій у ретрограді»"], correct:"«За квартал явка впала з 24 до 16 людей. Анонс приходив менше ніж за 2 дні. Пропоную розсилати його за 7 днів»", explain:"Рішення підкріплене цифрами, має причину й конкретний план перевірки. Це приклад із презентації «Корпоративна культура»."},
-        {q:"Учасник просить познайомити його з логістом. Що робить бізнес-менеджер за принципом Deliver WOW?", answers:["Пише обом коротке інтро, пропонує формат зустрічі й питає про результат","Надсилає учаснику контакт логіста та пояснює, як краще написати йому першим","Пише обом інтро й вважає питання закритим","Радить учаснику звернутися до загального чату клубу з проханням про рекомендації"], correct:"Пише обом коротке інтро, пропонує формат зустрічі й питає про результат", explain:"Ми думаємо про досвід учасника, а не просто про виконання задачі. Це приклад із презентації."},
+        {q:"Учасник просить познайомити його з логістом. Що робить бізнес-менеджер за принципом Deliver WOW?", answers:["Пише обом коротке інтро, пропонує формат зустрічі й питає про результат","Надсилає учаснику контакт логіста та пояснює, як краще написати йому першим","Пише обом інтро й вважає питання закритим","Радить учаснику звернутися до загального чату клубу з проханням про рекомендації"], correct:"Пише обом коротке інтро, пропонує формат зустрічі й питає про результат", explain:"Ми думаємо про досвід учасника й помічаємо деталі. Це приклад із презентації."},
         {q:"За принципом чесного зворотного зв'язку, чого очікують від людини, яка дає фідбек?", answers:["Бути так само відкритою до фідбеку у свій бік","Давати фідбек лише тоді, коли про це просять","Збирати зауваження й озвучувати їх на щомісячній зустрічі","Давати фідбек публічно, щоб усі вчились на прикладах"], correct:"Бути так само відкритою до фідбеку у свій бік", explain:"Чесний фідбек працює в обидва боки. Його дають одразу, а складне говорять тет-а-тет."},
         {q:"Із чим має бути пов'язаний особистий ріст співробітника за принципом Grow every day?", answers:["З цілями команди та компанії","З особистими кар'єрними планами співробітника","З кількістю пройдених курсів за рік","З рішеннями керівника відділу"], correct:"З цілями команди та компанії", explain:"Ріст заради росту не є ціллю компанії. Він має працювати на результат команди."},
-        {q:"Що краще написати у звіті для людини з любов'ю до результату?", answers:["«5 нових учасників»","«40 дзвінків і 12 зустрічей»","«Постійно на зв'язку й працюю понаднормово»","«Дуже багато старалась»"], correct:"«5 нових учасників»", explain:"Для людини з любов'ю до результату важливо, що вийшло, а не скільки вона старалася. Дзвінки й зустрічі описують дії."},
+        {q:"Що краще написати у звіті для людини з любов'ю до результату?", answers:["«5 нових учасників»","«40 дзвінків і 12 зустрічей»","«Постійно на зв'язку й працюю понаднормово»","«Дуже багато старалась»"], correct:"«5 нових учасників»", explain:"Для людини з любов'ю до результату важливо, що саме вийшло. Дзвінки й зустрічі описують дії."},
         {q:"Що робить дисциплінована людина, коли бачить ризик зірвати дедлайн?", answers:["Попереджає заздалегідь і пропонує новий термін","Працює понаднормово, щоб устигнути без попередження","Повідомляє про затримку в день дедлайну","Просить колегу закрити задачу"], correct:"Попереджає заздалегідь і пропонує новий термін", explain:"Дисципліна означає тримати домовленості й поважати дедлайни. Це приклад із розділу «Наші люди»."},
         {q:"Менеджер питає, як вчинити з учасником, який хоче заморозити участь. Що відповідає лідер у YBC?", answers:["«Які варіанти ти бачиш? Що обереш і чому?»","«Подивись, як це роблять в інших відділах, і повтори»","«Давай я вирішу сам, а ти повториш»","«Спитай у загальному чаті, що думають колеги»"], correct:"«Які варіанти ти бачиш? Що обереш і чому?»", explain:"Лідер допомагає зважити ризики, а рішення й відповідальність залишаються за менеджером."}
       ]
@@ -556,7 +655,7 @@
       id:"vacation", name:"Політика відпусток", category:"HR-політики · відпустки", color:"var(--accent)",
       hook:"20 днів на рік, авансом, одразу після пів року роботи.",
       doc:{
-        summary:"Відпустка YBC: 20 календарних днів оплачуваної відпустки на рік. Дні нараховуються авансом одразу, а не поступово.",
+        summary:"Відпустка YBC: 20 календарних днів оплачуваної відпустки на рік. Усі дні нараховуються авансом одразу на весь рік.",
         details:[
           "Оплачувану відпустку можна брати після 6 місяців роботи.",
           "Максимум 14 календарних днів поспіль за один захід.",
@@ -831,7 +930,7 @@
     ],
     "Бізнес-менеджер": [
       {q:"Скільки One to One щомісяця очікують від бізнес-менеджера?", answers:["50","25","100","15"], correct:"50", explain:"Щомісячні очікування: 50 One to One, 25 ННН і 50 підбірок знайомств. На тиждень це 5-15 One to One."},
-      {q:"За який час до дати продовження бізнес-менеджер інформує учасника про необхідність оновити участь?", answers:["За 2 місяці","За 1 місяць","За 3 місяці","За 2 тижні"], correct:"За 2 місяці", explain:"Далі БМ пише примітку в Zoho CRM, заповнює анкету продовження й записує учасника на співбесіду з CEO. За 2 тижні попереджають про відпустку, а не про продовження."},
+      {q:"За який час до дати продовження бізнес-менеджер інформує учасника про необхідність оновити участь?", answers:["За 2 місяці","За 1 місяць","За 3 місяці","За 2 тижні"], correct:"За 2 місяці", explain:"Далі БМ пише примітку в Zoho CRM, заповнює анкету продовження й записує учасника на співбесіду з CEO. Про відпустку керівника попереджають за 2 тижні."},
       {q:"Через який час після вступу учасника БМ записує його на адаптаційний зідзвон із керівником або CEO?", answers:["Через 2-4 місяці","Через 2-4 тижні","Через 6 місяців","Одразу в перший день"], correct:"Через 2-4 місяці", explain:"Після зідзвону бізнес-менеджер опрацьовує фідбек керівника або CEO. Це частина адаптації нових учасників."}
     ],
     "Сейлз-менеджер": [
@@ -956,9 +1055,11 @@
   function showGate(){
     document.getElementById("gate-wrap").hidden = false;
     document.getElementById("main-wrap").hidden = true;
+    window.scrollTo(0, 0);
   }
   function showMain(){
     rebuildModules();
+    window.scrollTo(0, 0);
     document.getElementById("gate-wrap").hidden = true;
     document.getElementById("main-wrap").hidden = false;
     document.getElementById("stat-user").textContent = "Учасник: " + state.user.name;
@@ -1196,6 +1297,7 @@
       '<div class="slide-nav">'+
         '<button class="slide-arrow" id="sl-prev" '+(i===0?"disabled":"")+'>Назад</button>'+
         '<div class="slide-dots">'+dots+'</div>'+
+        '<span class="slide-count">'+(i+1)+' / '+slides.length+'</span>'+
         '<button class="slide-arrow" id="sl-next" '+(i===slides.length-1?"disabled":"")+'>Далі</button>'+
       '</div>';
   }
@@ -1217,6 +1319,19 @@
 
   function closeDossier(){ document.getElementById("overlay").hidden = true; }
   document.getElementById("overlay").addEventListener("click", function(e){ if(e.target.id==="overlay") closeDossier(); });
+
+  // Поки відкрите вікно матеріалу чи тесту, сторінка під ним не прокручується.
+  // Кожне відкриття починається зверху. Escape закриває вікно.
+  (function(){
+    var overlayEl = document.getElementById("overlay");
+    new MutationObserver(function(){
+      var open = !overlayEl.hidden;
+      document.body.classList.toggle("modal-open", open);
+      if(open) overlayEl.scrollTop = 0;
+    }).observe(overlayEl, { attributes:true, attributeFilter:["hidden"] });
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !overlayEl.hidden) closeDossier(); });
+  })();
+  function scrollModalTop(){ document.getElementById("overlay").scrollTop = 0; }
 
   function checkSynthesis(){
     if(state.finalPassed){
@@ -1254,6 +1369,7 @@
           '<div id="explain-slot"></div>'+
         '</div>';
       document.getElementById("close-dossier").addEventListener("click", closeDossier);
+      scrollModalTop();
       var letters = ["A","B","C","D"];
       var optsEl = document.getElementById("opts");
       opt.forEach(function(text, i){
@@ -1299,6 +1415,7 @@
         '</div>';
       document.getElementById("close-dossier").addEventListener("click", closeDossier);
       document.getElementById("close-btn").addEventListener("click", closeDossier);
+      scrollModalTop();
       if(pass){
         document.getElementById("continue-btn").addEventListener("click", function(){ closeDossier(); opts.onPass && opts.onPass(q.correct, q.order.length); });
       } else {
