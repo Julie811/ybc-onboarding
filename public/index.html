@@ -328,9 +328,9 @@
   .brief-grid{ display:grid; grid-template-columns:1fr 1.4fr; gap:1rem; margin-top:1.2rem; }
   .brief-card{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:1.1rem 1.25rem; box-shadow:var(--shadow); }
   .brief-card h3{ font-size:1rem; margin-bottom:0.7rem; }
-  .brief-list{ margin:0; padding:0; list-style:none; counter-reset:m; }
-  .brief-list li{ counter-increment:m; display:flex; align-items:center; gap:0.65rem; font-size:0.95rem; padding:0.3rem 0; }
-  .brief-list li::before{ content:counter(m); flex:none; width:24px; height:24px; border-radius:8px; background:var(--accent-soft); color:var(--accent-strong); font-family:"IBM Plex Mono", monospace; font-size:0.78rem; font-weight:600; display:grid; place-items:center; }
+  .brief-list{ margin:0; padding-left:1.3rem; }
+  .brief-list li{ font-size:0.95rem; padding:0.2rem 0; }
+  .brief-list li::marker{ color:var(--ink); font-weight:600; }
   .brief-rules{ margin:0; padding:0; list-style:none; }
   .brief-rules li{ position:relative; padding:0.35rem 0 0.35rem 1.1rem; font-size:0.95rem; color:var(--ink-muted); }
   .brief-rules li::before{ content:""; position:absolute; left:0; top:0.95rem; width:6px; height:6px; border-radius:50%; background:var(--accent); }
@@ -1471,7 +1471,7 @@
 
       var num = (i+1) < 10 ? "0"+(i+1) : (i+1);
       var frontInner =
-        '<div class="front-top"><div class="front-head">'+iconTile(c.id)+'<div class="case-id">МОДУЛЬ '+num+'</div></div><div class="category">'+c.category+'</div></div>'+
+        '<div class="front-top"><div class="case-id">МОДУЛЬ '+num+'</div><div class="category">'+c.category+'</div></div>'+
         '<button class="lock-btn" data-decode="'+c.id+'">Розкрити модуль</button>';
 
       wrap.innerHTML =
@@ -1479,7 +1479,7 @@
           '<div class="card-face card-front">'+frontInner+'</div>'+
           '<div class="card-face card-back">'+
             '<div class="card-back-top">'+
-              '<span class="back-name">'+iconTile(c.id, "sm on")+'<span>'+c.name+'</span></span>'+
+              '<span class="back-name">'+c.name+'</span>'+
               '<span class="stamp-mini'+(passed?' pass':'')+'">'+(passed?(c.noQuiz?'ОЗНАЙОМЛЕНО':'ПРОЙДЕНО'):'ВІДКРИТО')+'</span>'+
             '</div>'+
             '<p class="back-ux">'+c.hook+'</p>'+
@@ -1562,7 +1562,7 @@
 
     document.getElementById("dossier-content").innerHTML =
       '<div class="dossier-head">'+
-        '<h2>'+iconTile(c.id, "sm on")+'<span>'+c.name+'</span></h2>'+
+        '<h2>'+c.name+'</h2>'+
         '<button class="close-x" id="close-dossier">Закрити</button>'+
       '</div>'+
       '<div class="doc-tabs">'+
