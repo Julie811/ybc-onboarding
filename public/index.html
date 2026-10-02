@@ -165,11 +165,9 @@
   .lock-overlay .state-label{ font-family:"IBM Plex Mono", monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-muted); }
   .lock-overlay p{ font-size:0.78rem; color:var(--ink-muted); margin:0; font-family:"IBM Plex Mono", monospace; }
 
-  .redact-line{ height:0.85rem; border-radius:2px; margin-bottom:0.5rem; background:repeating-linear-gradient(45deg, var(--ink) 0 6px, var(--surface-2) 6px 12px); opacity:0.85; }
   .card-front{ align-items:flex-start; justify-content:space-between; }
   .front-top .case-id{ font-family:"IBM Plex Mono", monospace; font-size:0.68rem; color:var(--ink-muted); letter-spacing:0.06em; }
   .front-top .category{ margin-top:0.5rem; font-family:"IBM Plex Mono", monospace; font-size:0.7rem; text-transform:uppercase; color:var(--ink-muted); letter-spacing:0.04em; }
-  .front-mid{ margin-top:0.8rem; }
   .lock-btn{
     align-self:flex-start; margin-top:0.9rem;
     background:var(--ink); color:var(--bg); border:none; border-radius:14px;
@@ -942,7 +940,6 @@
       var num = (i+1) < 10 ? "0"+(i+1) : (i+1);
       var frontInner =
         '<div class="front-top"><div class="case-id">МОДУЛЬ '+num+'</div><div class="category">'+c.category+'</div></div>'+
-        '<div class="front-mid" style="width:100%"><div class="redact-line" style="width:70%"></div><div class="redact-line" style="width:45%"></div></div>'+
         '<button class="lock-btn" data-decode="'+c.id+'">Розкрити модуль</button>';
 
       wrap.innerHTML =
