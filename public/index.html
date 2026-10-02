@@ -744,7 +744,7 @@
   // ПОСАДИ. Список для випадаючого списку на старті. Легко доповнити
   // новими позиціями, коли з'являться карти посад для них.
   // ==================================================================
-  var POSITIONS = ["Корпоративний секретар","Бізнес-менеджер","Сейлз-менеджер"];
+  var POSITIONS = ["Корпоративний секретар","Бізнес-менеджер","Сейлз-менеджер","Event-менеджер WISE","Event-менеджер Київ","IT Support Assistant","Head of HR"];
 
   // ==================================================================
   // КАРТИ ПОСАД. Сьомий модуль показує РІВНО ОДНУ карту: ту, що
@@ -851,6 +851,7 @@
       keyTerms:["One to One","ННН","Продовжуваність 75%+"],
       takeaway:"Бізнес-менеджер відповідає за якість знайомств і продовження участі. Головні цифри: 50 One to One, 25 ННН і продовжуваність 75-100%.",
       materials:[
+        ["Карта посади: Business Manager (Notion)", "https://app.notion.com/p/Business-Manager-308a2ff374c28083b3e2c54fedeb3324?pvs=26"],
         ["Адаптація учасника", "https://www.notion.so/3-1-1b3a2ff374c280648601ec91ca3508be"],
         ["Проведення щомісячного One to One", "https://www.notion.so/3-3-ONE-TO-ONE-19da2ff374c280ca8e35ed9e059aebab"],
         ["Організація «Ніколи не їж наодинці»", "https://www.notion.so/3-4-19da2ff374c28042af6ecd0ed7d8b593"],
@@ -906,6 +907,7 @@
       keyTerms:["План продажів 100%","Конверсія","CRM без помилок"],
       takeaway:"Сейлз-менеджер відповідає за виконання плану продажів і чистий CRM. Якість розмов оцінюють за чек-листом, середній поріг: 85 балів.",
       materials:[
+        ["Карта посади: Sales Manager (Notion)", "https://app.notion.com/p/Sales-Manager-1aba2ff374c28076b55bc19cc7ad2486?pvs=26"],
         ["Блок 1. Про компанію", "https://drive.google.com/file/d/1rCowutfGOJAh7-y1oRI4Rsc72HjOQCOf/view?usp=share_link"],
         ["Блок 2. Про продукти та послуги", "https://drive.google.com/file/d/1h1QuD6JCwEpw8RZ94yGCIyF_JWZVQ0zy/view?usp=share_link"],
         ["Блок 3. Цільова аудиторія", "https://drive.google.com/file/d/1S6sPZq9vfJpjxhvv7QOZ--dfcpDwHV_M/view?usp=sharing"],
@@ -919,6 +921,31 @@
       ]
     }
   };
+
+  // Посади, для яких поки є лише посилання на карту в Notion. Картка 7 модуля
+  // відкриває її за посиланням. Коли з'явиться повний текст, перенесіть
+  // посаду в POSITION_CARDS вище за зразком інших.
+  function linkOnlyCard(title, url){
+    return {
+      hook:"Карта посади: "+title+". Місія, обов'язки та показники ефективності.",
+      sections:[
+        ["Карта посади", "Повна карта посади відкривається за посиланням у розділі «Матеріали для ознайомлення» нижче."],
+        ["Що в ній є", [
+          "Місія посади й очікувані результати.",
+          "Ключові обов'язки та зони відповідальності.",
+          "Показники ефективності, за якими оцінюють роботу."
+        ]],
+        ["Що робити далі", "Відкрий карту посади, уважно прочитай її й повертайся, щоб завершити модуль."]
+      ],
+      keyTerms:["Місія посади","Обов'язки","Показники ефективності"],
+      takeaway:"Карта посади описує місію, обов'язки й показники ефективності твоєї ролі. Прочитай її повністю в Notion.",
+      materials:[["Карта посади: "+title+" (Notion)", url]]
+    };
+  }
+  POSITION_CARDS["Event-менеджер WISE"] = linkOnlyCard("Event-менеджер WISE", "https://app.notion.com/p/Event-manager-WISE-1aba2ff374c28010a447c4ff323b5a17?pvs=26");
+  POSITION_CARDS["Event-менеджер Київ"] = linkOnlyCard("Event-менеджер Київ", "https://app.notion.com/p/Event-manager-KYIV-26fa2ff374c28018b796ebce43fb640c?pvs=26");
+  POSITION_CARDS["IT Support Assistant"] = linkOnlyCard("IT Support Assistant", "https://app.notion.com/p/IT-Support-Assistant-24da2ff374c280819576e049ad694361?pvs=26");
+  POSITION_CARDS["Head of HR"] = linkOnlyCard("Head of HR", "https://app.notion.com/p/Head-of-HR-26ba2ff374c280e3acfbe952e5bced34?source=copy_link");
 
   // Питання з карти посади для фінального тесту: з кожної посади береться
   // одне випадкове. У тест модуля 7 вони не входять (там тесту немає).
@@ -1241,7 +1268,9 @@
     var docHtml =
       bodyHtml+
       '<div class="chips">'+chipsHtml+'</div>'+
-      '<div class="insight"><span class="tag">Головний висновок</span>'+renderText(c.doc.takeaway)+'</div>';
+      '<div class="insight"><span class="tag">Головний висновок</span>'+renderText(c.doc.takeaway)+'</div>'+
+      // У модулі карти посади посилання на карту видно одразу у вкладці «Документ»
+      (c.noQuiz && matHtml ? '<div class="block-label">Матеріали для ознайомлення</div><div class="materials">'+matHtml+'</div>' : '');
 
     var slides = c.slides ? c.slides : [
       {title:"Огляд", body:c.category+". "+c.hook},
