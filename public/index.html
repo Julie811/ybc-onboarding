@@ -302,7 +302,9 @@
   .card-flip.locked .mod-ico{ background:var(--border); }
 
   /* ---------- вступ: що в модулях і як це працює ---------- */
-  .brief-grid{ display:grid; grid-template-columns:1fr 1.4fr; gap:1rem; margin-top:1.2rem; }
+  .brief p.brief-lead{ color:var(--ink); font-weight:700; font-size:1.05rem; }
+  .brief p.brief-lead + p{ margin-top:0.2rem; }
+  .brief-grid{ display:grid; grid-template-columns:1fr; gap:1rem; margin-top:1.2rem; }
   .brief-card{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:1.1rem 1.25rem; box-shadow:var(--shadow); }
   .brief-card h3{ font-size:1rem; margin-bottom:0.7rem; }
   .brief-list{ margin:0; padding-left:1.3rem; }
@@ -453,7 +455,7 @@
       </div>
       <div class="hud-user">
         <div class="hud-who">
-          <span class="hud-who-label">Учасник</span>
+          <span class="hud-who-label">Співробітник</span>
           <span class="hud-who-name" id="stat-user">-</span>
         </div>
         <button class="reset-btn logout-btn" id="logout-btn" title="Вийти. Прогрес збережеться">Вийти</button>
@@ -480,20 +482,9 @@
   <div class="brief">
     <div class="eyebrow">Твій шлях у команду</div>
     <h2>Стань частиною команди YBC</h2>
-    <p>Онбординг складається із семи модулів. Шість розповідають про компанію, сьомий персональний: карта посади й план адаптації для твоєї ролі.</p>
+    <p class="brief-lead">Онбординг складається із 7 модулів.</p>
+    <p>6 розповідають про компанію, останній - персональний: карта посади й план адаптації для твоєї ролі.</p>
     <div class="brief-grid">
-      <div class="brief-card">
-        <h3>Що в модулях</h3>
-        <ol class="brief-list">
-          <li>Про компанію</li>
-          <li>Brand Core</li>
-          <li>Оргструктура</li>
-          <li>Корпоративна культура</li>
-          <li>Політика відпусток</li>
-          <li>Політика зворотного зв'язку</li>
-          <li>План адаптації під твою посаду</li>
-        </ol>
-      </div>
       <div class="brief-card">
         <h3>Як це працює</h3>
         <ul class="brief-rules">
