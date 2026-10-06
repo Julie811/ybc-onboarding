@@ -174,7 +174,7 @@
   }
   .stamp-mini.pass{ color:var(--good); border-color:var(--good); }
   .back-ux{ margin-top:0.6rem; font-size:0.8rem; color:var(--ink-muted); overflow-y:auto; flex:1; }
-  .back-actions{ display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.6rem; }
+  .back-actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; margin-top:0.6rem; }
   .mini-btn{ background:none; border:1px solid var(--border); color:var(--ink); border-radius:12px; font-size:0.76rem; font-weight:700; padding:0.35rem 0.6rem; font-family:"Manrope",sans-serif; }
   .mini-btn:hover{ border-color:var(--accent); }
   .mini-btn.quiz{ background:var(--accent); border-color:var(--accent); color:#fff; }
@@ -302,20 +302,21 @@
   .card-flip.locked .mod-ico{ background:var(--border); }
 
   /* ---------- вступ: що в модулях і як це працює ---------- */
-  .brief p.brief-lead{ color:var(--ink); font-weight:700; font-size:1.05rem; }
-  .brief p.brief-lead + p{ margin-top:0.2rem; }
-  .brief-grid{ display:grid; grid-template-columns:1fr; gap:1rem; margin-top:1.2rem; }
-  .brief-card{ background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:1.1rem 1.25rem; box-shadow:var(--shadow); }
-  .brief-card h3{ font-size:1rem; margin-bottom:0.7rem; }
-  .brief-list{ margin:0; padding-left:1.3rem; }
-  .brief-list li{ font-size:0.95rem; padding:0.2rem 0; }
-  .brief-list li::marker{ color:var(--ink); font-weight:600; }
-  .brief-rules{ margin:0; padding:0; list-style:none; }
-  .brief-rules li{ padding:0.55rem 0; font-size:0.95rem; color:var(--ink-muted); border-top:1px solid var(--border); }
-  .brief-rules li:first-child{ border-top:none; padding-top:0.1rem; }
-  .brief-rules b{ color:var(--ink); }
-  @media (max-width:760px){ .brief-grid{ grid-template-columns:1fr; } }
-
+  /* вступний блок: картка по центру, як картки на сайті YBC */
+  .brief{ text-align:center; }
+  .brief .eyebrow{ text-align:center; }
+  .brief-block{
+    max-width:720px; margin:1.6rem auto 0; background:var(--surface); border:1px solid var(--border);
+    border-radius:24px; box-shadow:var(--shadow); padding:2.2rem 2.4rem 1.6rem; text-align:center;
+  }
+  .brief-title{ font-size:clamp(1.5rem,3.6vw,1.9rem); line-height:1.15; }
+  .brief .brief-text{ margin:0.9rem auto 0; max-width:46ch; font-size:1.05rem; line-height:1.65; color:var(--ink-muted); }
+  .brief-sub{ margin-top:2rem; font-family:"Oswald",sans-serif; font-weight:600; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-muted); }
+  .brief-rules{ margin:0.6rem 0 0; padding:0; list-style:none; }
+  .brief-rules li{ padding:1.1rem 0; font-size:0.98rem; line-height:1.6; color:var(--ink-muted); border-top:1px solid var(--border); }
+  .brief-rules li:first-child{ border-top:none; }
+  .brief-rules b{ display:block; margin-bottom:0.25rem; font-family:"Oswald",sans-serif; font-weight:600; font-size:1.1rem; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink); }
+  .brief .path-note{ justify-content:center; margin-top:1.4rem; }
   /* ---------- сенсорні екрани: без залипання :hover ---------- */
   @media (hover:none){
     .lock-btn:hover, .next-btn:hover{ background:var(--ink); color:var(--bg); }
@@ -347,7 +348,8 @@
     .hud{ padding:1rem; border-radius:20px; gap:0.8rem; margin-bottom:1.2rem; }
     .hud-title .brand-logo{ height:36px; }
     .gate-logo{ height:46px; }
-    .brief-card{ padding:1rem; border-radius:18px; }
+    .brief-block{ padding:1.6rem 1.2rem 1.2rem; border-radius:20px; }
+    .brief .brief-text{ font-size:1rem; }
     .hud-user{ width:100%; justify-content:space-between; }
     .hud-who{ align-items:flex-start; flex:1; }
     .hud-who-name{ max-width:100%; }
@@ -482,20 +484,17 @@
   <div class="brief">
     <div class="eyebrow">Твій шлях у команду</div>
     <h2>Стань частиною команди YBC</h2>
-    <p class="brief-lead">Онбординг складається із 7 модулів.</p>
-    <p>6 розповідають про компанію, останній - персональний: карта посади й план адаптації для твоєї ролі.</p>
-    <div class="brief-grid">
-      <div class="brief-card">
-        <h3>Як це працює</h3>
-        <ul class="brief-rules">
-          <li><b>Після кожного з модулів 1-6 є тест.</b> Наступний модуль відкривається лише після його проходження.</li>
-          <li><b>Прохідний поріг: 60%.</b> Потрібно відповісти правильно щонайменше на 5 питань. У тестах по 8 питань, у тесті про відпустки 7. Спроб скільки завгодно.</li>
-          <li><b>Сьомий модуль без тесту.</b> Прочитай карту посади й заверши модуль кнопкою.</li>
-          <li><b>Фінальний тест.</b> Після всіх семи модулів: 5 правильних відповідей, і ти офіційно в команді.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="path-note">Прогрес по шляху: <span class="chain" id="chain"></span></div>
+    <div class="brief-block">
+      <h3 class="brief-title">Онбординг складається із 7 модулів</h3>
+      <p class="brief-text">6 розповідають про компанію, останній - персональний: карта посади й план адаптації для твоєї ролі.</p>
+      <div class="brief-sub">Як це працює</div>
+      <ul class="brief-rules">
+        <li><b>Тест після модулів 1-6</b>Наступний модуль відкривається лише після проходження тесту.</li>
+        <li><b>Прохідний поріг: 60%</b>Потрібно відповісти правильно щонайменше на 5 питань. У тестах по 8 питань, у тесті про відпустки 7. Спроб скільки завгодно.</li>
+        <li><b>Сьомий модуль</b>Ознайомся із картою посади та планом адаптації, заверши модуль кнопкою.</li>
+        <li><b>Фінальний тест</b>Після всіх семи модулів: 5 правильних відповідей, і ти офіційно в команді.</li>
+      </ul>
+    </div>    <div class="path-note">Прогрес по шляху: <span class="chain" id="chain"></span></div>
   </div>
 
   <div class="board" id="board"></div>
@@ -524,7 +523,7 @@
   </div>
 
   <footer>
-    <p>Модулі: про компанію, Brand Core, оргструктура, корпоративна культура, політика відпусток, політика зворотного зв'язку, план адаптації під посаду. Персональний довідник співробітників по філіях ведеться у внутрішньому Notion і на цьому публічному сайті не публікується.</p>
+    <p>Модулі: про компанію, Brand Core, оргструктура, корпоративна культура, політика відпусток, політика зворотного зв'язку, план адаптації під посаду.</p>
   </footer>
 </div>
 
