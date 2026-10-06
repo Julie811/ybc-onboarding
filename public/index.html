@@ -93,6 +93,7 @@
   .hud-who{ display:flex; flex-direction:column; align-items:flex-end; min-width:0; line-height:1.2; }
   .hud-who-label{ font-family:"Oswald",sans-serif; font-weight:600; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-muted); }
   .hud-who-name{ font-family:"Manrope",sans-serif; font-weight:700; font-size:1rem; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .hud-who-role{ font-family:"Manrope",sans-serif; font-weight:600; font-size:0.85rem; color:var(--ink-muted); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:0.1rem; }
   .hud-bottom{ display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; padding-top:0.9rem; border-top:1px solid var(--border); }
   .metrics{ display:flex; gap:0.7rem; flex-wrap:wrap; }
   .metric{ background:var(--bg); border-radius:16px; padding:0.55rem 1rem; display:flex; flex-direction:column; min-width:130px; }
@@ -363,7 +364,7 @@
     .info-item h4{ font-size:1.12rem; }
     .hud-user{ width:100%; justify-content:space-between; }
     .hud-who{ align-items:flex-start; flex:1; }
-    .hud-who-name{ max-width:100%; }
+    .hud-who-name, .hud-who-role{ max-width:100%; }
     .hud-bottom{ flex-direction:column; align-items:stretch; padding-top:0.8rem; }
     .metrics{ display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
     .metric{ min-width:0; padding:0.5rem 0.8rem; }
@@ -470,6 +471,7 @@
         <div class="hud-who">
           <span class="hud-who-label">Співробітник</span>
           <span class="hud-who-name" id="stat-user">-</span>
+          <span class="hud-who-role" id="stat-position"></span>
         </div>
         <button class="reset-btn logout-btn" id="logout-btn" title="Вийти. Прогрес збережеться">Вийти</button>
       </div>
@@ -1374,6 +1376,7 @@
     document.getElementById("gate-wrap").hidden = true;
     document.getElementById("main-wrap").hidden = false;
     document.getElementById("stat-user").textContent = state.user.name;
+    document.getElementById("stat-position").textContent = state.user.position || "";
     renderBoard(); updateHUD(); checkSynthesis();
   }
 
