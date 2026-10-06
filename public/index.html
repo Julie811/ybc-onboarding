@@ -28,7 +28,7 @@
   /* Платформа завжди світла: нічна тема браузера чи телефона дизайн не змінює. */
 
   *{ box-sizing:border-box; }
-  html{ font-size:15px; -webkit-text-size-adjust:100%; text-size-adjust:100%; background:var(--bg); color-scheme:only light; }
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; background:var(--bg); color-scheme:only light; }
   body.modal-open{ overflow:hidden; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:"Manrope",system-ui,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
   ::selection{ background:var(--accent-soft); }
@@ -315,6 +315,10 @@
     border-radius:28px; box-shadow:var(--shadow); padding:2rem 2.2rem; text-align:left;
   }
   .info-title{ font-size:clamp(1.6rem,3.6vw,2.1rem); line-height:1.1; }
+  .page-head{ text-align:center; margin:0.4rem auto 0; }
+  .brief .page-title{ font-size:clamp(2rem,5.4vw,2.8rem); line-height:1.1; }
+  .brief .page-sub{ margin:0.9rem auto 0; max-width:none; font-size:1.2rem; line-height:1.45; color:var(--ink); }
+  .brief .info-modules{ margin:1rem 0 0; max-width:none; font-size:1rem; line-height:1.65; color:var(--ink-muted); }
   .brief .info-lead{ margin:0.9rem 0 0; max-width:none; font-size:1.05rem; line-height:1.65; color:var(--ink-muted); }
   .info-list{ margin-top:1.4rem; }
   .info-item{ padding:1.2rem 0; }
@@ -488,12 +492,14 @@
   </div>
 
   <div class="brief">
+    <div class="page-head">
+      <h2 class="page-title">Стань частиною команди YBC</h2>
+      <p class="page-sub">Онбординг складається із 7 модулів<br>6 про компанію, останній - персональний.</p>
+    </div>
+
     <div class="info-card">
-      <h2 class="info-title">Стань частиною команди YBC</h2>
-      <div class="info-list">
-        <div class="info-item"><h4>Онбординг складається із 7 модулів</h4><p>6 про компанію, останній - персональний.</p></div>
-        <div class="info-item"><h4>Основні модулі</h4><p>Про компанію, Brand Core, Оргструктура, Корпоративна культура, Політика відпусток, Політика зворотного зв'язку, План адаптації під твою посаду.</p></div>
-      </div>
+      <h3 class="info-title">Основні модулі</h3>
+      <p class="info-modules">Про компанію, Brand Core, Оргструктура, Корпоративна культура, Політика відпусток, Політика зворотного зв'язку, План адаптації під твою посаду.</p>
     </div>
 
     <div class="info-card">
