@@ -28,7 +28,7 @@
   /* Платформа завжди світла: нічна тема браузера чи телефона дизайн не змінює. */
 
   *{ box-sizing:border-box; }
-  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; background:var(--bg); color-scheme:only light; }
+  html{ font-size:15px; -webkit-text-size-adjust:100%; text-size-adjust:100%; background:var(--bg); color-scheme:only light; }
   body.modal-open{ overflow:hidden; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:"Manrope",system-ui,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
   ::selection{ background:var(--accent-soft); }
@@ -65,7 +65,7 @@
   .field label{ display:block; font-size:0.8rem; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem; }
   .field input, .field select{
     width:100%; padding:0.65rem 0.8rem; border-radius:12px; border:1.5px solid var(--border);
-    background:var(--bg); color:var(--ink); font-family:"Manrope",sans-serif; font-size:1rem; min-height:48px;
+    background:var(--bg); color:var(--ink); font-family:"Manrope",sans-serif; font-size:16px; min-height:48px;
   }
   .field select{
     -webkit-appearance:none; appearance:none; cursor:pointer; padding-right:2.8rem;
@@ -315,9 +315,6 @@
     border-radius:28px; box-shadow:var(--shadow); padding:2rem 2.2rem; text-align:left;
   }
   .info-title{ font-size:clamp(1.6rem,3.6vw,2.1rem); line-height:1.1; }
-  .brief .info-note{ margin:0.5rem 0 0; max-width:none; font-size:0.9rem; line-height:1.5; color:var(--ink-muted); }
-  .info-card-compact .info-list{ margin-top:1.2rem; padding-top:1.2rem; border-top:1px solid var(--border); }
-  .info-card-compact .info-item{ padding:0; }
   .brief .info-lead{ margin:0.9rem 0 0; max-width:none; font-size:1.05rem; line-height:1.65; color:var(--ink-muted); }
   .info-list{ margin-top:1.4rem; }
   .info-item{ padding:1.2rem 0; }
@@ -491,14 +488,11 @@
   </div>
 
   <div class="brief">
-    <div class="info-card info-card-compact">
+    <div class="info-card">
       <h2 class="info-title">Стань частиною команди YBC</h2>
-      <p class="info-note">Онбординг складається із 7 модулів.</p>
       <div class="info-list">
-        <div class="info-item">
-          <h4>Основні модулі</h4>
-          <p>Про компанію, Brand Core, Оргструктура, Корпоративна культура, Політика відпусток, Політика зворотного зв'язку, План адаптації під твою посаду.</p>
-        </div>
+        <div class="info-item"><h4>Онбординг складається із 7 модулів</h4><p>6 про компанію, останній - персональний.</p></div>
+        <div class="info-item"><h4>Основні модулі</h4><p>Про компанію, Brand Core, Оргструктура, Корпоративна культура, Політика відпусток, Політика зворотного зв'язку, План адаптації під твою посаду.</p></div>
       </div>
     </div>
 
