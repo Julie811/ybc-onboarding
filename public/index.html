@@ -67,7 +67,12 @@
     width:100%; padding:0.65rem 0.8rem; border-radius:12px; border:1.5px solid var(--border);
     background:var(--bg); color:var(--ink); font-family:"Manrope",sans-serif; font-size:1rem; min-height:48px;
   }
-  .field input:focus{ border-color:var(--accent); outline:none; }
+  .field select{
+    -webkit-appearance:none; appearance:none; cursor:pointer; padding-right:2.8rem;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M1.5 1.75L7 7.25L12.5 1.75' stroke='%230f1214' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat:no-repeat; background-position:right 1.1rem center; background-size:14px 9px;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--accent); outline:none; }
   .field.err input{ border-color:var(--bad); }
   .field .err-msg{ font-size:0.78rem; color:var(--bad); margin-top:0.3rem; display:none; }
   .field.err .err-msg{ display:block; }
@@ -302,21 +307,22 @@
   .card-flip.locked .mod-ico{ background:var(--border); }
 
   /* ---------- вступ: що в модулях і як це працює ---------- */
-  /* вступний блок: картка по центру, як картки на сайті YBC */
+  /* вступ: два окремі блоки у стилі карток сайту YBC (заголовок Oswald, пункти з розділювачами) */
   .brief{ text-align:center; }
   .brief .eyebrow{ text-align:center; }
-  .brief-block{
-    max-width:720px; margin:1.6rem auto 0; background:var(--surface); border:1px solid var(--border);
-    border-radius:24px; box-shadow:var(--shadow); padding:2.2rem 2.4rem 1.6rem; text-align:center;
+  .info-card{
+    max-width:720px; margin:1.4rem auto 0; background:var(--surface); border:1px solid var(--border);
+    border-radius:28px; box-shadow:var(--shadow); padding:2rem 2.2rem; text-align:left;
   }
-  .brief-title{ font-size:clamp(1.5rem,3.6vw,1.9rem); line-height:1.15; }
-  .brief .brief-text{ margin:0.9rem auto 0; max-width:46ch; font-size:1.05rem; line-height:1.65; color:var(--ink-muted); }
-  .brief-sub{ margin-top:2rem; font-family:"Oswald",sans-serif; font-weight:600; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-muted); }
-  .brief-rules{ margin:0.6rem 0 0; padding:0; list-style:none; }
-  .brief-rules li{ padding:1.1rem 0; font-size:0.98rem; line-height:1.6; color:var(--ink-muted); border-top:1px solid var(--border); }
-  .brief-rules li:first-child{ border-top:none; }
-  .brief-rules b{ display:block; margin-bottom:0.25rem; font-family:"Oswald",sans-serif; font-weight:600; font-size:1.1rem; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink); }
-  .brief .path-note{ justify-content:center; margin-top:1.4rem; }
+  .info-title{ font-size:clamp(1.6rem,3.6vw,2.1rem); line-height:1.1; }
+  .brief .info-lead{ margin:0.9rem 0 0; max-width:none; font-size:1.05rem; line-height:1.65; color:var(--ink-muted); }
+  .info-list{ margin-top:1.4rem; }
+  .info-item{ padding:1.2rem 0; }
+  .info-item + .info-item{ border-top:1px solid var(--border); }
+  .info-item:first-child{ padding-top:0.2rem; }
+  .info-item:last-child{ padding-bottom:0; }
+  .info-item h4{ margin:0 0 0.3rem; font-family:"Manrope",sans-serif; font-weight:700; font-size:1.25rem; line-height:1.3; letter-spacing:0; text-transform:none; color:var(--ink); }
+  .brief .info-item p{ margin:0; max-width:none; font-size:1rem; line-height:1.6; color:var(--ink-muted); }  .brief .path-note{ justify-content:center; margin-top:1.4rem; }
   /* ---------- сенсорні екрани: без залипання :hover ---------- */
   @media (hover:none){
     .lock-btn:hover, .next-btn:hover{ background:var(--ink); color:var(--bg); }
@@ -348,8 +354,8 @@
     .hud{ padding:1rem; border-radius:20px; gap:0.8rem; margin-bottom:1.2rem; }
     .hud-title .brand-logo{ height:36px; }
     .gate-logo{ height:46px; }
-    .brief-block{ padding:1.6rem 1.2rem 1.2rem; border-radius:20px; }
-    .brief .brief-text{ font-size:1rem; }
+    .info-card{ padding:1.5rem 1.25rem; border-radius:22px; }
+    .info-item h4{ font-size:1.12rem; }
     .hud-user{ width:100%; justify-content:space-between; }
     .hud-who{ align-items:flex-start; flex:1; }
     .hud-who-name{ max-width:100%; }
@@ -424,7 +430,7 @@
     <img class="brand-logo gate-logo" src="assets/ybc-logo.png" alt="Young Business Club" width="571" height="182">
     <div class="eyebrow">Онбординг · Young Business Club</div>
     <h1>Стань частиною команди YBC</h1>
-    <p class="lead">Шість коротких модулів про компанію і сьомий персональний - план адаптації під твою посаду. Далі ти готовий(-а) до старту. Спочатку познайомимось.</p>
+    <p class="lead">Перш ніж розпочати, спочатку познайомимось.</p>
     <div class="gate-card">
       <div class="field" id="f-name">
         <label for="in-name">Ім'я та прізвище</label>
@@ -484,16 +490,28 @@
   <div class="brief">
     <div class="eyebrow">Твій шлях у команду</div>
     <h2>Стань частиною команди YBC</h2>
-    <div class="brief-block">
-      <h3 class="brief-title">Онбординг складається із 7 модулів</h3>
-      <p class="brief-text">6 розповідають про компанію, останній - персональний: карта посади й план адаптації для твоєї ролі.</p>
-      <div class="brief-sub">Як це працює</div>
-      <ul class="brief-rules">
-        <li><b>Тест після модулів 1-6</b>Наступний модуль відкривається лише після проходження тесту.</li>
-        <li><b>Прохідний поріг: 60%</b>Потрібно відповісти правильно щонайменше на 5 питань. У тестах по 8 питань, у тесті про відпустки 7. Спроб скільки завгодно.</li>
-        <li><b>Сьомий модуль</b>Ознайомся із картою посади та планом адаптації, заверши модуль кнопкою.</li>
-        <li><b>Фінальний тест</b>Після всіх семи модулів: 5 правильних відповідей, і ти офіційно в команді.</li>
-      </ul>
+    <div class="info-card">
+      <h3 class="info-title">Онбординг складається із 7 модулів</h3>
+      <p class="info-lead">6 розповідають про компанію, останній - персональний: карта посади й план адаптації для твоєї ролі.</p>
+      <div class="info-list">
+        <div class="info-item"><h4>1. Про компанію</h4><p>Історія, місія, цінності та стратегія клубу.</p></div>
+        <div class="info-item"><h4>2. Brand Core</h4><p>Стратегічне ядро бренду: для кого клуб, навіщо він існує й яку цінність дає.</p></div>
+        <div class="info-item"><h4>3. Оргструктура</h4><p>Філії, відділи й ролі, зони відповідальності та показники ефективності.</p></div>
+        <div class="info-item"><h4>4. Корпоративна культура</h4><p>Принципи роботи, формат комунікації, ритуали та система відповідальності.</p></div>
+        <div class="info-item"><h4>5. Політика відпусток</h4><p>Скільки днів, коли їх можна брати й як подати заявку.</p></div>
+        <div class="info-item"><h4>6. Політика зворотного зв'язку</h4><p>Право чесно говорити про проблеми без страху наслідків.</p></div>
+        <div class="info-item"><h4>7. План адаптації</h4><p>Карта посади й план адаптації для твоєї ролі.</p></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3 class="info-title">Як це працює</h3>
+      <div class="info-list">
+        <div class="info-item"><h4>Тест після модулів 1-6</h4><p>Наступний модуль відкривається лише після проходження тесту.</p></div>
+        <div class="info-item"><h4>Прохідний поріг: 60%</h4><p>Потрібно відповісти правильно щонайменше на 5 питань. У тестах по 8 питань, у тесті про відпустки 7. Спроб скільки завгодно.</p></div>
+        <div class="info-item"><h4>Сьомий модуль</h4><p>Ознайомся із картою посади та планом адаптації, заверши модуль кнопкою.</p></div>
+        <div class="info-item"><h4>Фінальний тест</h4><p>Після всіх семи модулів: 5 правильних відповідей, і ти офіційно в команді.</p></div>
+      </div>
     </div>    <div class="path-note">Прогрес по шляху: <span class="chain" id="chain"></span></div>
   </div>
 
