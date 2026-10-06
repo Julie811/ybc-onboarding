@@ -102,7 +102,9 @@
   .hud-actions{ display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
   .final-btn{
     font-family:"Manrope",sans-serif; font-weight:700; font-size:0.92rem; min-height:46px; padding:0 1.3rem;
-    border-radius:14px; border:none; background:var(--surface-2); color:var(--ink-muted);
+    border-radius:14px; border:none; color:var(--ink);
+    /* кнопка поступово зафарбовується червоним за кількістю пройдених модулів */
+    background:linear-gradient(90deg, var(--accent) var(--p,0%), var(--surface-2) var(--p,0%));
   }
   .final-btn.ready{ background:var(--accent); color:#fff; }
   .final-btn.ready:hover{ background:var(--accent-strong); }
@@ -200,7 +202,6 @@
   }
   .synth-unlocked h2{ font-size:1.5rem; }
   .synth-unlocked > p{ margin-top:0.7rem; color:var(--ink-muted); max-width:56ch; margin-left:auto; margin-right:auto; font-size:0.95rem; }
-  .rank-line{ font-family:"Manrope", sans-serif; font-size:0.85rem; color:var(--gold); margin-top:0.8rem; }
   .next-steps{ margin-top:1.4rem; text-align:left; background:var(--surface); border:1px dashed var(--draft); border-radius:16px; padding:1rem 1.2rem; }
   .next-steps ul{ margin:0.5rem 0 0; padding-left:1.2rem; font-size:0.9rem; color:var(--ink-muted); }
 
@@ -510,7 +511,7 @@
         <div class="info-item"><h4>Сьомий модуль</h4><p>Ознайомся із картою посади та планом адаптації, заверши модуль кнопкою.</p></div>
         <div class="info-item"><h4>Фінальний тест</h4><p>Після всіх семи модулів: 5 правильних відповідей, і ти офіційно в команді.</p></div>
       </div>
-    </div>    <div class="path-note">Прогрес по шляху: <span class="chain" id="chain"></span></div>
+    </div>    <div class="path-note">Прогрес: <span class="chain" id="chain"></span></div>
   </div>
 
   <div class="board" id="board"></div>
@@ -525,7 +526,6 @@
       <span class="welcome-stamp">Ласкаво просимо в команду</span>
       <h2>Онбординг завершено</h2>
       <p>Усі модулі й фінальний тест пройдені. Результат збережено. Команда YBC бачить твій прогрес.</p>
-      <div class="rank-line" id="final-rank-line"></div>
       <div class="next-steps">
         <span class="draft-badge">ЧЕРНЕТКА</span>
         <div style="margin-top:0.5rem;font-size:0.9rem;">Що далі (приклад, замініть на реальні кроки):</div>
@@ -816,12 +816,6 @@
   }
   function iconTile(moduleId, cls){ return '<span class="mod-ico '+(cls||"")+'">'+iconSvg(moduleId)+'</span>'; }
 
-  var RANKS = [
-    {min:0, title:"Рівень: Перше знайомство"},
-    {min:200, title:"Рівень: Занурення в процеси"},
-    {min:450, title:"Рівень: Впевнений старт"},
-    {min:700, title:"Рівень: Амбасадор культури YBC"}
-  ];
 
   // ==================================================================
   // ПОСАДИ. Список для випадаючого списку на старті. Легко доповнити
@@ -1439,7 +1433,6 @@
   // ---------- board logic ----------
   function passedCount(){ return Object.keys(state.passed).filter(function(k){return state.passed[k];}).length; }
   function isUnlocked(i){ return i===0 || !!state.passed[MODULES[i-1].id]; }
-  function rankFor(score){ var r = RANKS[0]; for(var i=0;i<RANKS.length;i++){ if(score>=RANKS[i].min) r = RANKS[i]; } return r.title; }
 
   function updateHUD(){
     document.getElementById("stat-passed").textContent = passedCount();
@@ -1449,9 +1442,12 @@
     var chain = document.getElementById("chain");
     chain.innerHTML = MODULES.map(function(c){ return '<span class="'+(state.passed[c.id]?"on":"")+'"></span>'; }).join("");
     var fb = document.getElementById("final-btn");
+    var pct = Math.round(passedCount() / MODULES.length * 100);
+    fb.style.setProperty("--p", pct + "%");
+    fb.title = "Пройдено модулів: " + passedCount() + " з " + MODULES.length;
     if(state.finalPassed){ fb.textContent = "Фінальний тест пройдено"; fb.className = "final-btn done"; fb.disabled = true; }
     else if(passedCount() >= MODULES.length){ fb.textContent = "Фінальний тест"; fb.className = "final-btn ready"; fb.disabled = false; }
-    else{ fb.textContent = "Фінальний тест ("+passedCount()+"/"+MODULES.length+")"; fb.className = "final-btn"; fb.disabled = true; }
+    else{ fb.textContent = "Фінальний тест"; fb.className = "final-btn"; fb.disabled = true; }
 
     // Блок під дошкою: підказка й кнопка запуску фінального тесту
     var locked = document.getElementById("synth-locked");
@@ -1658,7 +1654,6 @@
     if(state.finalPassed){
       document.getElementById("synth-locked").hidden = true;
       document.getElementById("synth-unlocked").hidden = false;
-      document.getElementById("final-rank-line").textContent = rankFor(state.score);
     }
   }
 
@@ -1790,7 +1785,7 @@
         persist();
         updateHUD();
         checkSynthesis();
-        sendEvent("final_pass", "Фінальний тест, "+rankFor(state.score), correct+"/"+total+" · всього балів: "+state.score);
+        sendEvent("final_pass", "Фінальний тест пройдено", correct+"/"+total+" · правильних відповідей загалом: "+state.correct+"/"+state.answered);
       }
     });
   }
